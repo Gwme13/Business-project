@@ -48,29 +48,27 @@ def strip_emojis(text):
 
 
 def strip_hashtags(text):
-    #return re.sub('(#)([^ !@#$%^&*(),.?":{}\|<>]+)', '\2', text)
     return re.sub(r'#(\w+)', '', text)
 
 def strip_special_chars(text):
     # remove special characters but keep \' for contractions
-    return re.sub('[^A-Za-z\'\s\/]+', '', text)
-
+    text = re.sub(r'[^A-Za-z\'\s]+', ' ', text)
+    
+    return text
 
 def strip_mentions(text):
     return re.sub(r'@(\w+)', '', text)
-
-def strip_new_lines(text):
-    return re.sub(r'\n', ' ', text)
 
 
 def strip_links(text):
     
 
-    link_pattern = r'([(\-)(A-z)]){3,}:\/\/([(\-)(0-9)(A-z)*]+\.?[\w])+([(,|;|/|%|?|=|&|.|\-)(0-9)(A-z)])*'
+    link_pattern =  r'\b(?:https?|ftp)?:\/\/(?:www\.)?[\w-]+(?:\.[\w-]+)+[\w\-./?%&=]*\b'
 
     
     text = re.sub(link_pattern, "", text)
     
+
     return trim_spaces(text)
 
 
@@ -78,15 +76,6 @@ def trim_spaces(text):
     text = text.strip()                    # trim leading and trailing spaces
     text = re.sub(r' {2,}', " ", text)     # trim repeated spaces
     return text
-
-
-def strip(text):
-    text = text.replace('\u00A0',' ')       # replace invisible symbols with spaces for better duplicate detection 
-    text = text.replace('\u2013','-')       # uniform hypen symbols
-    text = text.replace('&amp;', '') 
-    text = text.replace('&lt;', '') 
-    text = text.replace('&gt;', '') 
-    return text.strip() 
 
 
 def replace_abbreviations(text):
@@ -196,13 +185,15 @@ def strip_censorship(text):
     text = re.sub(r'\b\w\*+\b', '', text)
     
     return text
+
+
     
 
 def filter_string(text):
     
     text = old_strip_emojis(text) 
     text = strip_emojis(text)
-    text = strip_new_lines(text)
+    
     text = strip_hashtags(text)
     text = strip_mentions(text)
     text = strip_links(text)
@@ -212,6 +203,7 @@ def filter_string(text):
     text = strip_censorship(text)
     
     text = strip_special_chars(text)
+    
     
     text = trim_spaces(text)
     
