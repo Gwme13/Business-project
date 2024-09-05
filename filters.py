@@ -1,3 +1,5 @@
+import re
+
 def old_strip_emojis(text):
     ## See:
     ## https://stackoverflow.com/a/58356570
@@ -53,9 +55,6 @@ def strip_special_chars(text):
     # remove special characters but keep \' for contractions
     return re.sub('[^A-Za-z\'\s\/]+', '', text)
 
-def remove_single_char_words(text):
-    # removes single char words, but not the single char 'a' or 'i'
-    return re.sub(r'\b(?!a\b|i\b)[a-zA-Z]{1}\b', '', text)
 
 def strip_mentions(text):
     return re.sub(r'@(\w+)', '', text)
@@ -81,7 +80,7 @@ def trim_spaces(text):
     return text
 
 
-def final_strip(text):
+def strip(text):
     text = text.replace('\u00A0',' ')       # replace invisible symbols with spaces for better duplicate detection 
     text = text.replace('\u2013','-')       # uniform hypen symbols
     text = text.replace('&amp;', '') 
@@ -185,17 +184,42 @@ def replace_abbreviations(text):
  'jfc': 'jesus fucking christ',
  "y'all": 'you all',
  'plz': 'please',
- 'stfu': 'shut the fuck up'}
+ 'stfu': 'shut the fuck up'
+ }
     
     for abbr, full_form in abbreviations.items():
         text = re.sub(r'\b' + re.escape(abbr) + r'\b', full_form, text)
     return text
 
-
-
-def filter(text):
+def strip_censorship(text):
     
-   text = old_strip_emojis(text).strip_emojis(text).str
+    text = re.sub(r'\b\w\*+\b', '', text)
+    
+    return text
+    
+
+def filter_string(text):
+    
+    text = old_strip_emojis(text) 
+    text = strip_emojis(text)
+    text = strip_new_lines(text)
+    text = strip_hashtags(text)
+    text = strip_mentions(text)
+    text = strip_links(text)
+    
+    text = replace_abbreviations(text)
+    
+    text = strip_censorship(text)
+    
+    text = strip_special_chars(text)
+    
+    text = trim_spaces(text)
+    
+    
+    return text
+   
+   
+   
 
     
     
