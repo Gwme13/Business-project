@@ -1,0 +1,295 @@
+
+Search
+Write
+Sign up
+
+Sign in
+
+
+
+How I use Gemini on my PDF files using Python!
+Woyera
+Woyera
+
+·
+Follow
+
+5 min read
+·
+Aug 20, 2024
+24
+
+
+
+
+
+Have you ever wished your files could just talk back to you? I sure have. After spending way too many hours sifting through endless PDFs and spreadsheets, I decided it was time to make my files do the heavy lifting.
+
+Gemini and Python, a dynamic duo that’s turned my documents into interactive, chatty objects. In this article, I’ll walk you through how I’ve harnessed these tools to create a simple yet powerful way to converse with my files, in as little as two steps! No more manual searching, no more wasted time, just a smarter, faster way to get the information you need.
+
+Schedule a free call with us at www.woyera.com if you have any questions about AI and how to best utilize it for your personal or business projects!
+
+Step 1: Getting our key!
+To get access to the Gemini API which we will be using to prompt our documents, we first need to get an access key.
+
+First go to the Google AI Studio homepage and sign in. Once on the homepage, click the “Get API key” button.
+
+
+After clicking the “Get API key” button you will be taken to the API key page, select “Create API key”.
+
+
+A small window will pop-up, select the search bar on the window and select “Generative Language Client”.
+
+
+After creating your API key, make sure you copy the key and paste it onto a notepad, this code will disappear once you exit and cant be seen again. Make sure you keep it somewhere safe and accessible!
+
+
+Step 2: The code!
+Now that we have our access key we can start to use the Google Gemini API! I will go through what each line of code does, but if you don’t feel like reading through all that, feel free to skip to the end to see the entire script.
+
+We can start off our Python script by importing the necessary packages we need. In this case we need “google.generativeai”, so go in your terminal and enter the command “pip install google.generativeai”.
+
+
+The first line of code should be importing the package we just installed.
+
+import google.generativeai as genai
+Next, hardcode your API key and initialize a Gemini client. Hardcoding your API key is not the best practice since its not as safe as setting is as an environment variable, but in this case I think we’ll be okay!
+
+# Hardcode your API key here
+API_KEY = "YOUR_API_KEY_GOES_HERE"
+
+# Configure the API with your hardcoded API key
+genai.configure(api_key=API_KEY)
+This step pretty much just creates an instance of the “GenerativeModel” from the “genai” module. The argument lets us specify the model of Gemini we want to use, in our case its “gemini-1.5-flash”.
+
+# Initialize the Gemini model
+model = genai.GenerativeModel('gemini-1.5-flash')
+In this step we are setting the “file_path” variable to the path of the PDF file we want to locate. In this case I have a “files” folder right outside of my code that my PDF is located in, change this variable to wherever the file you want to upload to the API.
+
+The following line is just proper syntax for using the Gemini Files API, feel free to change the “display_name” to anything you want.
+
+# Path to the PDF file in the 'files' folder
+file_path = "./files/Verity-By-Colleen-Hoover.pdf"
+
+sample_file = genai.upload_file(path=file_path, display_name="ANY_NAME_FOR_YOUR_FILE")
+
+# Confirm upload
+print(f"Uploaded file '{sample_file.display_name}' as: {sample_file.uri}")
+And here is what my folder setup looks like so you can reference it.
+
+
+This next line generates content based on the uploaded PDF file, its where you will type your prompt.
+
+# Generate content using the uploaded document
+response = model.generate_content([sample_file, "What are Verity's children's names?"])
+
+# Print the generated content
+print(response.text)
+Here’s the final code!
+
+import google.generativeai as genai
+
+# Hardcode your API key here
+API_KEY = "YOUR_API_KEY_HERE"
+
+# Configure the API with your hardcoded API key
+genai.configure(api_key=API_KEY)
+
+# Initialize the Gemini model
+model = genai.GenerativeModel('gemini-1.5-flash')
+
+# Path to the PDF file in the 'files' folder
+file_path = "./files/Verity-By-Colleen-Hoover.pdf" 
+sample_file = genai.upload_file(path=file_path, display_name="My File PDF")
+
+# Confirm upload
+print(f"Uploaded file '{sample_file.display_name}' as: {sample_file.uri}")
+
+# Generate content using the uploaded document
+response = model.generate_content([sample_file, "What are Verity's childrens names?"])
+
+# Print the generated content
+print(response.text)
+And there you have it! Using Gemini on your own files using Python is not only versatile, but its totally easy to start out. Our total script was less than ten lines (not including the comments), in just a matter of ten lines you can upload any PDF you want and prompt it. So what are you waiting for, get to talking to your documents right away!
+
+For any questions regarding AI and how to implement them on your personal or business projects, visit our website at www.woyera.com. Our experts will give you advice on how to best elevate your business with powerful AI tools!
+
+AI
+Python
+Technology
+Artificial Intelligence
+ChatGPT
+24
+
+
+
+Woyera
+Written by Woyera
+586 Followers
+We build custom, secure, robust chat bots for security & privacy minded enterprises
+
+Follow
+
+More from Woyera
+How I use the new GPT-4o on my own files with Python!
+Woyera
+Woyera
+
+How I use the new GPT-4o on my own files with Python!
+If you’ve kept up with current AI news you will know that OpenAI just recently released their most advanced model, GPT-4o. Although its…
+
+May 28
+481
+4
+How I Effortlessly Tame Llama 3.1 with Python!
+Woyera
+Woyera
+
+How I Effortlessly Tame Llama 3.1 with Python!
+Having trouble getting started with Llama 3.1? Here’s a very easy way to use it using minimal code!
+Aug 9
+3
+Pinecone vs. Chroma: The Pros and Cons
+Woyera
+Woyera
+
+Pinecone vs. Chroma: The Pros and Cons
+In recent years, vector databases have gained significant attention for their ability to efficiently store and retrieve high-dimensional…
+Jul 21, 2023
+148
+Llama 3.1: Discover the Updates and Alternative Utilization Methods
+Woyera
+Woyera
+
+Llama 3.1: Discover the Updates and Alternative Utilization Methods
+2 alternative ways to access Llama 3.1
+Jul 30
+3
+1
+See all from Woyera
+Recommended from Medium
+Detect hidden surveillance cameras with your phone
+Vasileiadis A. (CyberKid)
+Vasileiadis A. (CyberKid)
+
+Detect hidden surveillance cameras with your phone
+A family recently it had a big surprise on their Airbnb: a hidden camera disguised as a smoke detector in the living room, monitoring their…
+Aug 5
+1.6K
+19
+100% Accurate AI Claimed by Acurai — OpenAI and Anthropic Confirm Acurai’s Discoveries
+Michael Wood
+Michael Wood
+
+in
+
+Cubed
+
+100% Accurate AI Claimed by Acurai — OpenAI and Anthropic Confirm Acurai’s Discoveries
+Acurai’s audacious claims to have discovered how LLMs operate are now confirmed by studies conducted by OpenAI and Anthropic.
+
+Aug 26
+616
+9
+Lists
+
+
+
+ChatGPT prompts
+48 stories
+·
+1957 saves
+
+AI-generated image of a cute tiny robot in the backdrop of ChatGPT’s logo
+
+ChatGPT
+21 stories
+·
+781 saves
+
+
+A phone with a tweet on it describing a deepfake video of the Ukrainian president, with a labeled fake image in the background
+AI Regulation
+6 stories
+·
+557 saves
+
+
+
+What is ChatGPT?
+9 stories
+·
+429 saves
+Document Extraction is GenAI’s Killer App
+Uri Merhav
+Uri Merhav
+
+in
+
+Towards Data Science
+
+Document Extraction is GenAI’s Killer App
+The future is here and you don’t get killer robots. You get great automation for tedious office work
+Aug 13
+399
+4
+Forget Pip, Poetry & Virtualenv: This Rust-powered Tool is the Only Python Package Manager You'll…
+Kenny Vaneetvelde
+Kenny Vaneetvelde
+
+in
+
+Level Up Coding
+
+Forget Pip, Poetry & Virtualenv: This Rust-powered Tool is the Only Python Package Manager You'll…
+Remember juggling between pip, pip-tools, pipx, poetry, pyenv, and virtualenv? Those days are over!
+
+Aug 25
+720
+6
+When you want ChatGPT to think more deeply, try the magic word: “RUMINATE.” This simple prompt can push AI from quick, superficial responses (System 1 thinking) to more thoughtful, accurate outputs (System 2 thinking).
+Jim the AI Whisperer
+Jim the AI Whisperer
+
+in
+
+The Generator
+
+My one-word AI prompt to induce deeper reasoning and more accurate output from ChatGPT: “RUMINATE”
+Slow down, genius: A simple hack for smarter AI responses
+
+Aug 28
+2.5K
+31
+Fabric: The Best AI Tool That Nobody is Talking About
+Prakash Joshi Pax
+Prakash Joshi Pax
+
+Fabric: The Best AI Tool That Nobody is Talking About
+An open-source AI tool to automate every day tasks
+
+Aug 26
+475
+3
+See more recommendations
+Help
+
+Status
+
+About
+
+Careers
+
+Press
+
+Blog
+
+Privacy
+
+Terms
+
+Text to speech
+
+Teams
+
+To make Medium work, we log user data. By using Medium, you agree to our Privacy Policy, including cookie policy.
