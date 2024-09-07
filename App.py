@@ -21,11 +21,16 @@ stopwords_en = stopwords.words('english')
 nltk.download('wordnet')
 
 from nltk.stem.wordnet import WordNetLemmatizer
+
+import warnings
+warnings.filterwarnings('ignore')
+
+
+def clear_console():
+    os.system('cls')
     
 
 def process_dataset_and_get_results(dataset_path, output_pdf, api_key=None, company_name=None):
-    
-    
     
     df = {}
     
@@ -64,14 +69,14 @@ def process_dataset_and_get_results(dataset_path, output_pdf, api_key=None, comp
     print("Processing the dataset...")    
     
     # Category distribution
-    plt.figure(figsize=(8, 8))
+    #plt.figure(figsize=(8, 8))
     sns.countplot(x='rating', data=df, order=df['rating'].value_counts().index, stat='percent', palette='viridis')
     plt.title('Rating Distribution')
     plt.ylabel('Percentage')
     plt.xlabel('Rating')
     plt.tight_layout()
     plt.savefig('rating_distribution.png', format='png', bbox_inches='tight')
-    plt.show()
+    plt.close()
     
     df['review'] = df['review'].str.lower()
 
@@ -107,7 +112,7 @@ def process_dataset_and_get_results(dataset_path, output_pdf, api_key=None, comp
     
     plt.savefig('wordcloud.png', format='png', bbox_inches='tight')
   
-    plt.show()
+    plt.close()
     
     print("GeminAI API Integration")
     
@@ -208,5 +213,30 @@ def process_dataset_and_get_results(dataset_path, output_pdf, api_key=None, comp
 
 if __name__ == "__main__":
    
-    process_dataset_and_get_results("./dataset/MacDonalds_Reviews_Cleaned.csv", "output.pdf", api_key="AIzaSyBzjTSU97Yedj0yo5GDLxuUQVxxCWDunVk", company_name="McDonald's")
+    #process_dataset_and_get_results("./dataset/MacDonalds_Reviews_Cleaned.csv", "output.pdf", api_key="AIzaSyBzjTSU97Yedj0yo5GDLxuUQVxxCWDunVk", company_name="McDonald's")
+    
+    clear_console()
+    
+    print("\n")
+    
+    print("""
+          
+          
+  __  __                                                      _     _              _   
+ |  \/  |                                       /\           (_)   | |            | |  
+ | \  / | __ _ _ __   __ _  __ _  ___ _ __     /  \   ___ ___ _ ___| |_ __ _ _ __ | |_ 
+ | |\/| |/ _` | '_ \ / _` |/ _` |/ _ \ '__|   / /\ \ / __/ __| / __| __/ _` | '_ \| __|
+ | |  | | (_| | | | | (_| | (_| |  __/ |     / ____ \\__ \__ \ \__ \ || (_| | | | | |_ 
+ |_|  |_|\__,_|_| |_|\__,_|\__, |\___|_|    /_/    \_\___/___/_|___/\__\__,_|_| |_|\__|
+                            __/ |                                                      
+                           |___/                                                       
 
+          
+          """)
+    
+    
+    print("\n")
+    print("\n")
+
+    # call the function for Shopzilla dataset
+    process_dataset_and_get_results("./dataset/Shopzilla_Reviews_Cleaned.csv", "output_shopzilla.pdf", api_key="AIzaSyBzjTSU97Yedj0yo5GDLxuUQVxxCWDunVk", company_name="Shopzilla")
