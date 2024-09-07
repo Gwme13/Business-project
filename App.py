@@ -58,7 +58,11 @@ def process_dataset_and_get_results(dataset_path, output_pdf, api_key=None, comp
     if api_key is None:
         print("Error: 'api_key' is required.")
         
-        
+    
+    print("Dataset loaded successfully.")
+    
+    print("Processing the dataset...")    
+    
     # Category distribution
     plt.figure(figsize=(8, 8))
     sns.countplot(x='rating', data=df, order=df['rating'].value_counts().index, stat='percent', palette='viridis')
@@ -104,6 +108,99 @@ def process_dataset_and_get_results(dataset_path, output_pdf, api_key=None, comp
     plt.savefig('wordcloud.png', format='png', bbox_inches='tight')
   
     plt.show()
+    
+    print("GeminAI API Integration")
+    
+    prompt = f""" 
+    you are a virtual assistant to the CEO of {company_name}. I will provide you with reviews in text format. Analyze them and I want you to provide:
+        1) Main Topics.
+        2) Assign a rank of positive or negative to each.
+        3) For the formulation of a new strategy in business identify my company's main problems (worst topic) and propose technical-economic feedback.
+        
+        Provide a detailed analysis.
+    """
+        
+    genai.configure(api_key=api_key)
+    
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    
+    # write the reviews to a text file
+    with open('reviews.txt', 'w') as f:
+        f.write('\n'.join(df['review']))
+        
+      
+    sample_file = genai.upload_file(path='reviews.txt', display_name='reviews.txt')
+
+    print(f"Uploaded file '{sample_file.display_name}'")
+    
+    # delete the uploaded file
+    os.remove('reviews.txt')
+    
+    # Generate content using the uploaded document
+    response = model.generate_content([sample_file, prompt])
+
+    # Save the response to a text file
+    with open('output.txt', 'w') as f:
+        f.write(response.text)
+        
+    print("Analysis completed.")
+    
+    print("Generating PDF report...")
+    
+    
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    
+   
+    pdf.add_page()
+    
+   
+    pdf.set_font("Arial", size=11)
+
+    # Read the text from the output file and write it to the PDF
+    with open('output.txt', 'r', encoding='utf-8') as f:
+        for line in f:
+            pdf.multi_cell(0, 10, line)  # Allow for multi-line text
+            
+    
+    # delete the output file
+    os.remove('output.txt')
+
+    # Next, add the images to the PDF
+    pdf.add_page()
+
+    # Add the rating distribution image to the PDF
+    image = Image.open('rating_distribution.png')
+    image_width, image_height = image.size
+    max_width, max_height = 100, 100  # Dimensioni massime nel PDF (in mm)
+
+    
+    width_ratio = max_width / image_width
+    height_ratio = max_height / image_height
+    scale_ratio = min(width_ratio, height_ratio)
+
+    new_width = int(image_width * scale_ratio)
+    new_height = int(image_height * scale_ratio)
+
+    
+    pdf.image('rating_distribution.png', x=10, y=None, w=new_width, h=new_height)
+    
+    # Add the word cloud image to the PDF
+    image = Image.open('wordcloud.png')
+    image_width, image_height = image.size
+    max_width, max_height = 100, 100  # Dimensioni massime nel PDF (in mm)
+    
+    width_ratio = max_width / image_width
+    height_ratio = max_height / image_height
+    scale_ratio = min(width_ratio, height_ratio)
+    
+    new_width = int(image_width * scale_ratio)
+    new_height = int(image_height * scale_ratio)
+    
+    pdf.image('wordcloud.png', x=10, y=None, w=new_width, h=new_height)
+    
+    # Salva il PDF finale
+    pdf.output(output_pdf)
         
     
 
@@ -111,5 +208,5 @@ def process_dataset_and_get_results(dataset_path, output_pdf, api_key=None, comp
 
 if __name__ == "__main__":
    
-    process_dataset_and_get_results("./dataset/MacDonalds_Reviews_Cleaned.csv", "output.pdf", api_key="API_KEY", company_name="Company Name")
+    process_dataset_and_get_results("./dataset/MacDonalds_Reviews_Cleaned.csv", "output.pdf", api_key="AIzaSyBzjTSU97Yedj0yo5GDLxuUQVxxCWDunVk", company_name="McDonald's")
 
