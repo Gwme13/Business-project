@@ -1,2 +1,5 @@
 ## ignore all files in dataset folder
 /dataset/*
+
+# ingore .png files
+*.png
