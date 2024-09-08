@@ -3,3 +3,7 @@
 
 # ingore .png files
 *.png
+
+# ignore .pdf files
+*.pdf
+
