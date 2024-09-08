@@ -160,7 +160,7 @@ def process_dataset_and_get_results(dataset_path, output_pdf, api_key=None, comp
     pdf.add_page()
     
    
-    pdf.set_font("Arial", size=11)
+    pdf.set_font("Arial", size=8)
 
     # Read the text from the output file and write it to the PDF
     with open('output.txt', 'r', encoding='utf-8') as f:
