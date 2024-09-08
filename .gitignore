@@ -3,3 +3,10 @@
 
 # ingore .png files
 *.png
+
+# ignore .jpg files
+*.jpg
+
+# ignore .pdf files
+*.pdf
+
